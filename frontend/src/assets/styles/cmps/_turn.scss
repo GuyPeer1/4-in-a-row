@@ -1,22 +1,14 @@
-.turn-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .turn {
-        color: $clrWhite;
-        font-family: space-gro;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        .img-container {
-            position: relative;
-        }
+.turn {
+    position: relative;
+    margin: 0 auto;
+    color: $clrWhite;
+    font-family: space-gro;
 
         .img-env {
-            width: 191px;
-            height: 150px;
+            position: relative;
+            bottom: em(30px);
+            max-width: 191px;
+            // max-height: 150px;
         }
 
         .img-txt {
@@ -33,5 +25,5 @@
                 font-size: em(56px);
             }
         }
-    }
+    
 }

@@ -1,0 +1,19 @@
+.app-header {
+    background-color: red ;
+    display: flex;
+    justify-content: space-between;
+
+    a {
+        padding: em(10px) em(2px);
+    }
+
+    max-height: em(50px);
+
+    @include for-narrow-layout {
+        a {
+            padding: em(20px);
+        }
+
+        max-height: em(70px);
+    }
+}

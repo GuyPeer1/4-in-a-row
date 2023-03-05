@@ -4,20 +4,34 @@ import { boardService } from '../services/board.service'
 export function HomePage() {
 
     const [board, setBoard] = useState(boardService.getEmptyBoard())
-    console.table(board)
+
+    function addToBoard(ev, i, j) {
+        console.log(ev.target)
+        if (board[i][j].isEmpty === false) return
+        ev.target.className += board[i][j].color
+        board[i][j].isEmpty = false
+        boardService.checkWin(board, i, j)
+
+    }
+
     return (
         <section className='home-page'>
-            <h2>hiii</h2>
-            <table>
-                    {board.map((row, index) => <tr key={index}>
-                        
-                        {row.map((cell, indexC) => <td key={indexC} >
-                            <div className="cell"></div>
-                        </td>
-                        )}
 
-                    </tr>)}
-            </table>
+
+            <section className='board'>
+                {board.map((row, index) => <div key={index} className="row flex" >
+
+                    {row.map((cell, indexC) => <div
+                        key={indexC}
+                        className={`cell ${cell.pos.i}-${cell.pos.j}`}
+                        onClick={(ev) => addToBoard(ev, cell.pos.i, cell.pos.j)}
+                    ></div>)}
+
+                </div>)}
+
+            </section>
+
+
         </section >
     )
 }

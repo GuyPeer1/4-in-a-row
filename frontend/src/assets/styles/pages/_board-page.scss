@@ -32,7 +32,9 @@
         background-image: url(../../imgs/board-layer-black-large.svg);
         background-size: cover;
         background-repeat: no-repeat;
-        
+        display: flex;
+        flex-direction: column;
+                
         .img-marker{
             position: relative;
             bottom:40px;

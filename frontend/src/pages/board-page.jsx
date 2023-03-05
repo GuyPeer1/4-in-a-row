@@ -52,7 +52,9 @@ export function BoardPage() {
                     ></div>)}
 
                 </div>)}
-                <Turn />
+                <div className="turn-wrapper">
+                    <Turn />
+                </div>
             </section>
 
 

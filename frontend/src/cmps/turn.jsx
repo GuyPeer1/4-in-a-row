@@ -7,7 +7,7 @@ export default function Turn({ name = "PLAYER 1" }) {
             <div className="img-txt">
                 <span className='player-name'>{name}'S TURN</span>
                 <span className='time-left'>30s</span>
-                </div>
+            </div>
         </div>
     </section>
 }

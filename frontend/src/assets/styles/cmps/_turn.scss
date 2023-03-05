@@ -1,9 +1,37 @@
-.turn{
-    .img-env{
-        position: relative;
-        left: 28%;
-        bottom: auto;
-        width: 191px;
-        height: 150px;
+.turn-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .turn {
+        color: $clrWhite;
+        font-family: space-gro;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .img-container {
+            position: relative;
+        }
+
+        .img-env {
+            width: 191px;
+            height: 150px;
+        }
+
+        .img-txt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            .player-name {
+                font-size: em(16px);
+            }
+
+            .time-left {
+                font-size: em(56px);
+            }
+        }
     }
 }

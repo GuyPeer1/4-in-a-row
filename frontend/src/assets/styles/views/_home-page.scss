@@ -1,0 +1,25 @@
+.home-page {
+
+
+    table {
+        margin: 0 auto;
+        min-width: 350px;
+        height: 322px;
+        padding: em(15px);
+        background-image: url(../../imgs/board-layer-black-large.svg);
+        background-size: cover;
+
+        td {
+            &.cell {
+                display: table-cell;
+                background-color: rgb(196, 172, 39);
+                border-radius: 50%;
+                width: 40px !important;
+                height: 40px !important;
+                text-align: center;
+            }
+        }
+
+    }
+
+}

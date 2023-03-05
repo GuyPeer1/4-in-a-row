@@ -1,28 +1,9 @@
 .main-layout {
-    display: grid;
-    grid-template-columns: 20px 1fr 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 
-    >* {
-        grid-column: 2;
-
-        &.full {
-            grid-column: 1 /-1;
-        }
+    main {
+        flex-grow: 1;
     }
-
-    @include for-narrow-layout {
-        grid-template-columns:
-            minmax(20px, 1fr) minmax(auto, $break-narrow) minmax(20px, 1fr);
-    }
-
-    @include for-normal-layout {
-        grid-template-columns:
-            minmax(20px, 1fr) minmax(auto, $break-normal) minmax(20px, 1fr);
-    }
-
-    @include for-wide-layout {
-        grid-template-columns:
-            minmax(20px, 1fr) minmax(auto, $break-wide) minmax(20px, 1fr);
-    }
-
 }

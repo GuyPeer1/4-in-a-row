@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
+import Turn from '../cmps/turn.jsx'
+
 import { boardService } from '../services/board.service'
+import logo from '../assets/imgs/logo.svg'
+import marker from '../assets/imgs/marker-red.svg'
 
 export function BoardPage() {
 
@@ -17,10 +21,14 @@ export function BoardPage() {
     return (
         <section className='board-page'>
 
-
+            <div className='board-options'>
+                <button className="btn">MENU</button>
+                <img className="img-game-logo" src={logo} />
+                <button className="btn">RESTART</button>
+            </div>
             <section className='board'>
+                <img className="img-marker" src={marker} />
                 {board.map((row, index) => <div key={index} className="row flex" >
-
                     {row.map((cell, indexC) => <div
                         key={indexC}
                         className={`cell ${cell.pos.i}-${cell.pos.j}`}
@@ -28,7 +36,7 @@ export function BoardPage() {
                     ></div>)}
 
                 </div>)}
-
+                <Turn />
             </section>
 
 

@@ -1,24 +1,52 @@
 .board-page {
     margin-top: 70px;
+    background-color: $clrPurple;
+    
+    .board-options {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: em(130px);
+        
+        .img-game-logo {
+            width: em(52px);
+            height: em(52px);
+        }
 
-
+        .btn {
+            font-family: spaceGrotesk !important;
+            padding: 8px;
+            background-color: $clrDarkPurple;
+            color: $clrWhite;
+            border-radius: em(32px);
+            font-size: em(16px);
+            font-weight: 400;
+        }
+    }
+    
     .board {
-        margin: 0 auto;
+        margin: em(40px) auto;
         width: 450px;
         height: 420px;
         padding: em(15px);
         background-image: url(../../imgs/board-layer-black-large.svg);
         background-size: cover;
         background-repeat: no-repeat;
-
-
+        
+        .img-marker{
+            position: relative;
+            bottom:40px;
+            left: 80%;
+            width: em(32px);
+            height: em(26px);
+        }
+        
         .row {
             gap: 20px;
             margin: 1px 0 11px 0px;
         }
 
         .cell {
-            // background-color: #e6610f;
             border-radius: 50%;
             width: 51px;
             height: 51px;
@@ -41,6 +69,7 @@
                 background-color: green;
             }
         }
+
 
     }
 

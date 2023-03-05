@@ -3,19 +3,19 @@
     margin: 0 auto;
     color: $clrWhite;
     font-family: space-gro;
+    text-align: center;
+    bottom: em(30px);
+    width: fit-content;
 
     .img-env {
         position: relative;
-        bottom: em(30px);
         max-width: 191px;
     }
 
     .img-txt {
-        position: absolute;
-        width: 100%;
-        top: 40%;
-        left: 70%;
-        transform: translate(-50%, -50%);
+        position: relative;
+        bottom: em(110px);
+
         display: flex;
         flex-direction: column;
 
@@ -25,7 +25,6 @@
 
         .time-left {
             font-size: em(56px);
-            padding-left: em(10px);
         }
     }
 

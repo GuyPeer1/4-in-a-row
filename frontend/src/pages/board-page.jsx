@@ -4,10 +4,13 @@ import Turn from '../cmps/turn.jsx'
 import { boardService } from '../services/board.service'
 import logo from '../assets/imgs/logo.svg'
 import marker from '../assets/imgs/marker-red.svg'
+import { useNavigate } from 'react-router-dom'
 
 export function BoardPage() {
     const [modalOpen, setOpenModal] = useState(false)
     const [board, setBoard] = useState(boardService.getEmptyBoard())
+
+    const navigate = useNavigate()
 
     function addToBoard(ev, i, j) {
         console.log(ev.target)
@@ -30,19 +33,20 @@ export function BoardPage() {
                 <h1>PAUSE</h1>
 
                 <div className="btn-area">
-                    <button className='btn'>CONTINUE GAME</button>
+                    <button onClick={toggleModal} className='btn'>CONTINUE GAME</button>
                     <button className='btn'>RESTART</button>
-                    <button className='btn quit'>QUIT GAME</button>
+                    <button onClick={() => navigate('/')} className='btn quit'>QUIT GAME</button>
                 </div>
 
             </article>}
 
             <div className='board-options'>
                 <button onClick={toggleModal} className="btn">MENU</button>
-                <img className="img-game-logo" src={logo} />
                 <button className="btn">RESTART</button>
             </div>
+
             <section className='board'>
+                <img className="img-game-logo" src={logo} />
                 <img className="img-marker" src={marker} />
                 {board.map((row, index) => <div key={index} className="row flex" >
                     {row.map((cell, indexC) => <div
@@ -52,10 +56,8 @@ export function BoardPage() {
                     ></div>)}
 
                 </div>)}
-                    <Turn />
             </section>
-
-
+            <Turn />
         </section >
     )
 }

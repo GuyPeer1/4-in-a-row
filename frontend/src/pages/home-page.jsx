@@ -19,8 +19,8 @@ export function HomePage() {
 
 
                 <div className="btn-area">
-                    <button className='btn cpu'><span>PLAY VS CPU</span> <img src={cpuImg} alt="" /></button>
-                    <button className='btn player'><span>PLAY VS PLAYER</span> <img src={playerVsPlayerImg} alt="" /></button>
+                    <button onClick={() => navigate('/board-page')} className='btn cpu'><span>PLAY VS CPU</span> <img src={cpuImg} alt="" /></button>
+                    <button onClick={() => navigate('/board-page')} className='btn player'><span>PLAY VS PLAYER</span> <img src={playerVsPlayerImg} alt="" /></button>
                     <button onClick={moveToRules} className='btn rules'>GAME RULES</button>
                 </div>
 

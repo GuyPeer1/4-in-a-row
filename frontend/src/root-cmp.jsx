@@ -5,7 +5,6 @@ import routes from './routes'
 
 import { AppHeader } from './cmps/app-header'
 import { UserMsg } from './cmps/user-msg'
-import { AppFooter } from './cmps/app-footer'
 
 export function RootCmp() {
 
@@ -17,7 +16,6 @@ export function RootCmp() {
                     {routes.map(route => <Route key={route.path} exact={true} element={route.component} path={route.path} />)}
                 </Routes>
             </main>
-            <AppFooter />
             <UserMsg />
         </section>
     )

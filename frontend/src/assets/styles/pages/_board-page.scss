@@ -26,8 +26,8 @@
     
     .board {
         margin: em(40px) auto;
-        width: 450px;
-        height: 420px;
+        max-width: 450px;
+        max-height: 420px;
         padding: em(15px);
         background-image: url(../../imgs/board-layer-black-large.svg);
         background-size: cover;

@@ -6,7 +6,7 @@ import logo from '../assets/imgs/logo.svg'
 import marker from '../assets/imgs/marker-red.svg'
 
 export function BoardPage() {
-
+    const [modalOpen, setOpenModal] = useState(false)
     const [board, setBoard] = useState(boardService.getEmptyBoard())
 
     function addToBoard(ev, i, j) {
@@ -18,11 +18,27 @@ export function BoardPage() {
 
     }
 
+    function toggleModal() {
+        modalOpen ? setOpenModal(false) : setOpenModal(true)
+        document.querySelector('body').classList.toggle('shadow')
+    }
+
     return (
         <section className='board-page'>
+            {modalOpen && <article className='menu-modal'>
+
+                <h1>PAUSE</h1>
+
+                <div className="btn-area">
+                    <button className='btn'>CONTINUE GAME</button>
+                    <button className='btn'>RESTART</button>
+                    <button className='btn quit'>QUIT GAME</button>
+                </div>
+
+            </article>}
 
             <div className='board-options'>
-                <button className="btn">MENU</button>
+                <button onClick={toggleModal} className="btn">MENU</button>
                 <img className="img-game-logo" src={logo} />
                 <button className="btn">RESTART</button>
             </div>

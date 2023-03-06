@@ -19,65 +19,97 @@
         }
     }
 
-    .board {
+    .board-layout {
+        display: flex;
+        max-width: fit-content;
         margin: 0 auto;
         margin-top: 40px;
-        background-size: cover;
-        background-repeat: no-repeat;
-        max-width: 450px;
-        max-height: 415px;
-        background-image: url(../../imgs/board-layer-white-large.svg);
-        
-        @media (max-width: 800px) {
-            background-image: url(../../imgs/board-layer-white-small.svg);
-            max-width: 335px;
-            max-height: 310px;
-        }
 
-        .img-game-logo {
+        .player-modal {
             position: relative;
-            bottom: em(90px);
-            left: 40%;
-            width: em(52px);
-            height: em(52px);
+            border-radius: em(7.5px);
+            border: 2px solid black;
+            box-shadow: 0px 8px 8px #000000;
+            background-color: $clrWhite;
+            padding: em(22px) em(10px);
+            margin: 0 50px;
+            max-width: 151px;
+            align-self: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: em(4px);
 
-        }
-
-        .img-marker {
-            position: relative;
-            bottom: em(50px);
-            left: 70%;
-            width: em(32px);
-            height: em(26px);
-        }
-
-        .row {
-            position: relative;
-            bottom: em(45px);
-            gap: 12px;
-            margin-left: em(10px);
-            margin-bottom: em(12px);
-        }
-
-        .cell {
-            border-radius: 50%;
-            width: 51px;
-            height: 51px;
-
-            &.red {
-                background-color: red;
+            img {
+                position: absolute;
+                top: em(-18px);
+                max-width: 45px;
             }
 
-            &.blue {
-                background-color: blue;
+            h4 {
+                font-size: em(26px);
+            }
+        }
+
+        .board {
+            background-size: cover;
+            background-repeat: no-repeat;
+            max-width: 450px;
+            max-height: 415px;
+            background-image: url(../../imgs/board-layer-white-large.svg);
+            padding: em(5px);
+
+            @media (max-width: 800px) {
+                background-image: url(../../imgs/board-layer-white-small.svg);
+                max-width: 335px;
+                max-height: 310px;
             }
 
-            &.pink {
-                background-color: pink;
+            .img-game-logo {
+                position: relative;
+                bottom: em(90px);
+                left: 40%;
+                width: em(52px);
+                height: em(52px);
+
             }
 
-            &.green {
-                background-color: green;
+            .img-marker {
+                position: relative;
+                bottom: em(50px);
+                left: 70%;
+                width: em(32px);
+                height: em(26px);
+            }
+
+            .row {
+                position: relative;
+                bottom: em(45px);
+                gap: 12px;
+                margin-left: em(5px);
+                margin-bottom: em(10.5px);
+            }
+
+            .cell {
+                border-radius: 50%;
+                width: 51px;
+                height: 51px;
+
+                &.red {
+                    background-color: red;
+                }
+
+                &.blue {
+                    background-color: blue;
+                }
+
+                &.pink {
+                    background-color: pink;
+                }
+
+                &.green {
+                    background-color: green;
+                }
             }
         }
     }

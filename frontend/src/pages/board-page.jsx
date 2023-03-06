@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Turn from '../cmps/turn.jsx'
 
 import { boardService } from '../services/board.service'
+import { utilService } from '../services/util.service.js'
+
 import logo from '../assets/imgs/logo.svg'
 import marker from '../assets/imgs/marker-red.svg'
-import redDisc from '../assets/imgs/counter-red-large.svg'
-import yellowDisc from '../assets/imgs/counter-yellow-large.svg'
-import { utilService } from '../services/util.service.js'
+
+import Turn from '../cmps/turn.jsx'
+import { showSuccessMsg } from '../services/event-bus.service'
 
 export function BoardPage() {
     const [modalOpen, setOpenModal] = useState(false)
@@ -15,13 +16,10 @@ export function BoardPage() {
     const [turn, setTurn] = useState(' yellow-disc')
     const navigate = useNavigate()
 
-    let user1 = { discUrl: redDisc }
-    let user2 = { discUrl: yellowDisc }
-    let currUser = {}
 
     useEffect(() => {
         document.querySelector('.main-layout').style.backgroundColor = '#7945FF'
- 
+        
     }, [])
 
 
@@ -39,7 +37,8 @@ export function BoardPage() {
         setBoard(newBoard)
         setTurn(turn === ' red-disc' ? ' yellow-disc' : ' red-disc')
         /// need negs loop
-        boardService.checkWin(board, placeToSit.i, placeToSit.j)
+        let win = boardService.checkWin(board, placeToSit.i, placeToSit.j, turn)
+        if(win) showSuccessMsg('You won!')
     }
 
 

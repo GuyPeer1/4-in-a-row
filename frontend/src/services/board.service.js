@@ -17,41 +17,82 @@ function getEmptyBoard() {
     return board
 }
 
-function checkWin(board, i, j) {
-    if (_checkVertical(board, i, j)) console.log('won')
-    if (_checkHorizontal(board, i, j)) console.log('won')
-    if (_checkLeftDiagnol(board, i, j)) console.log('won')
-    if (_checkRightDiagnol(board, i, j)) console.log('won')
-   
+function checkWin(board, I, J, turn) {
+    if (_checkVertical(board, I, J, turn)) return true
+    else if (_checkHorizontal(board, I, J, turn)) return true
+    else if (_checkTLBRDiagnol(board, I, J, turn)) return true
+    else if (_checkBLTRDiagnol(board, I, J, turn)) return true
 }
 
-function _checkVertical(board, row, j) {
-    let counter = 1
-    for (let i = 1; i < board.length - 1; i++) {
-        board[i][j].color === board[i + 1][j].color ? counter++ : counter = 1
+function _checkVertical(board, I, J, turn) {
+    let count = 0
+    for (let i = 0; i < board.length; i++) {
+        if (board[i][J].color === turn) {
+            count++
+            if (count === 4) return true
+        } else {
+            count = 0
+        }
     }
-
-    if (counter === 4) return true
-    return false
 }
 
-function _checkHorizontal(board, I, J) {
-    let counter = 1
-    for (let i = 0; i < board[0].length - 1; i++) {
-        if (board[I][i].color === '') continue
-        board[I][i].color === board[I][i + 1 ].color ? counter++ : counter = 1
-        if (counter === 4) return true
+function _checkHorizontal(board, I, J, turn) {
+    let count = 0
+    for (let j = 0; j < board[0].length; j++) {
+        if (board[I][j].color === turn) {
+            count++
+            if (count === 4) {
+                return true
+            }
+        } else {
+            count = 0
+        }
     }
-    return false
 }
 
-function _checkLeftDiagnol(board, I, J) {
-  
+function _checkTLBRDiagnol(board, I, J, turn) {
+    let count = 0
+    let i = I, j = J
+    while (i > 0 && j > 0) {
+        i--
+        j--
+    }
+    while (i < board.length && j < board[0].length) {
+        if (board[i][j].color === turn) {
+            count++
+            if (count === 4) {
+                return true
+            }
+        } else {
+            count = 0
+        }
+        i++
+        j++
+    }
 }
 
-function _checkRightDiagnol(board, I, J) {
-   
+function _checkBLTRDiagnol(board, I, J, turn) {
+    let count = 0
+    let i = I
+    let j = J
+    while (i < board.length - 1 && j > 0) {
+        i++
+        j--
+    }
+    while (i >= 0 && j < board[0].length) {
+        if (board[i][j].color === turn) {
+            count++
+            if (count === 4) {
+                return true
+            }
+        } else {
+            count = 0
+        }
+        i--
+        j++
+    }
 }
+
 
 
 function _getEmptyCell(i, j) {

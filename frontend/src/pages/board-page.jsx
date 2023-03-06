@@ -7,6 +7,8 @@ import { AppFooter } from '../cmps/app-footer'
 
 import logo from '../assets/imgs/logo.svg'
 import marker from '../assets/imgs/marker-red.svg'
+import player1 from '../assets/imgs/player-one.svg'
+import player2 from '../assets/imgs/player-two.svg'
 
 import Turn from '../cmps/turn.jsx'
 import { showSuccessMsg } from '../services/event-bus.service'
@@ -25,17 +27,20 @@ export function BoardPage() {
         return () => {
             board.removeEventListener('mousemove', handleMouseMove)
         }
-      }, [])
+    }, [])
 
 
-      function handleMouseMove(event) {
+    function handleMouseMove(event) {
         const container = document.querySelector('.board');
         const containerRect = container.getBoundingClientRect();
         const xPosition = event.clientX - containerRect.left;
         const imgMarker = document.querySelector('.img-marker');
         imgMarker.style.left = xPosition + 'px';
-      }
+    }
 
+    useEffect(() => {
+        document.querySelector('.main-layout').style.backgroundColor = '#7945FF'
+    }, [])
 
     function addToBoard(coulmnNumber) {
         let possibleLocations = []
@@ -52,9 +57,8 @@ export function BoardPage() {
         setTurn(turn === ' red-disc' ? ' yellow-disc' : ' red-disc')
         /// need negs loop
         let win = boardService.checkWin(board, placeToSit.i, placeToSit.j, turn)
-        if(win) showSuccessMsg('You won!')
+        if (win) showSuccessMsg('You won!')
     }
-
 
     function startGame(player) {
 
@@ -64,12 +68,12 @@ export function BoardPage() {
         modalOpen ? setOpenModal(false) : setOpenModal(true)
         document.querySelector('body').classList.toggle('shadow')
     }
-    
+
     function getCmpMove() {
         let colmunIdx = utilService.getRandomIntInclusive(0, 6)
         return addToBoard(colmunIdx)
     }
-    
+
     return (
         <section className='board-page'>
             {modalOpen && <article className='menu-modal'>
@@ -88,21 +92,35 @@ export function BoardPage() {
                 <button onClick={toggleModal} className="btn">MENU</button>
                 <button className="btn">RESTART</button>
             </div>
-            <section className='board'>
+            <section className='board-layout'>
+                <article className='player-modal player1'>
+                    <img src={player1} alt="" />
+                    <p>PLAYER 1</p>
+                    <h4>12</h4>
+                </article>
+                <section className='board'>
 
-                <img className="img-game-logo" src={logo} />
-                <img className="img-marker" src={marker} />
-                {board.map((row, indexR) => <div key={indexR} className="row flex">
-                    {row.map((cell, indexC) => <div
-                        key={indexC}
-                        onClick={() => addToBoard(indexC)}
-                        className={`cell ${cell.pos.i}-${cell.pos.j} ${cell.color ? cell.color : ''}`}
+                    <img className="img-game-logo" src={logo} />
+                    <img className="img-marker" src={marker} />
+                    {board.map((row, indexR) => <div key={indexR} className="row flex">
+                        {row.map((cell, indexC) => <div
+                            key={indexC}
+                            onClick={() => addToBoard(indexC)}
+                            className={`cell ${cell.pos.i}-${cell.pos.j} ${cell.color ? cell.color : ''}`}
                         ></div>)}
 
-                </div>)}
+                    </div>)}
+                </section>
+
+                <article className='player-modal player2'>
+                    <img src={player2} alt="" />
+                    <p>PLAYER 2</p>
+                    <h4>23</h4>
+                </article>
+
             </section>
             <Turn />
-                        <AppFooter/>
+            <AppFooter/>
         </section >
     )
 }

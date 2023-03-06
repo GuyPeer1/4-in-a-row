@@ -12,7 +12,6 @@ export function HomePage() {
 
     return (
         <section className='home-page'>
-
             <article className="start-modal">
 
                 <img src={logoImg} alt="" />

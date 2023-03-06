@@ -3,8 +3,10 @@
 
     .board-options {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
+        gap: em(180px);
+        // padding-inline: 40%;
 
         .btn {
             font-family: space-gro !important;
@@ -78,8 +80,13 @@
                 background-color: green;
             }
         }
-
-
     }
+}
 
+.red-disc {
+    background-image: url('../../imgs/counter-red-large.svg');
+}
+
+.yellow-disc {
+    background-image: url('../../imgs/counter-yellow-large.svg');
 }

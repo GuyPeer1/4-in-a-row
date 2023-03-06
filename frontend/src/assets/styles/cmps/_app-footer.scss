@@ -1,7 +1,8 @@
 .app-footer{
-    background-color: #111;
-    color: $clr4;
-    padding: 20px;
-    margin: 10px;
-    text-align: center;
+    background-color: $clrDarkPurple;
+    height: em(200px);
+    position: relative;
+    bottom: em(270px);
+    border-radius: em(60px) em(60px) 0px 0px;
+    z-index: -1;
 }

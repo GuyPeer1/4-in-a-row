@@ -1,5 +1,5 @@
 export function AppFooter() {
     return (
-        <footer>222</footer>
+        <section className="app-footer"></section>
     )
 }

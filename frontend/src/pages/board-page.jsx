@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { boardService } from '../services/board.service'
 import { utilService } from '../services/util.service.js'
+import { AppFooter } from '../cmps/app-footer'
 
 import logo from '../assets/imgs/logo.svg'
 import marker from '../assets/imgs/marker-red.svg'
@@ -15,12 +16,25 @@ export function BoardPage() {
     const [board, setBoard] = useState(boardService.getEmptyBoard())
     const [turn, setTurn] = useState(' yellow-disc')
     const navigate = useNavigate()
-
+    const mainLayoutRef = useRef(null)
 
     useEffect(() => {
         document.querySelector('.main-layout').style.backgroundColor = '#7945FF'
-        
-    }, [])
+        const board = document.querySelector('.board')
+        board.addEventListener('mousemove', handleMouseMove)
+        return () => {
+            board.removeEventListener('mousemove', handleMouseMove)
+        }
+      }, [])
+
+
+      function handleMouseMove(event) {
+        const container = document.querySelector('.board');
+        const containerRect = container.getBoundingClientRect();
+        const xPosition = event.clientX - containerRect.left;
+        const imgMarker = document.querySelector('.img-marker');
+        imgMarker.style.left = xPosition + 'px';
+      }
 
 
     function addToBoard(coulmnNumber) {
@@ -50,12 +64,12 @@ export function BoardPage() {
         modalOpen ? setOpenModal(false) : setOpenModal(true)
         document.querySelector('body').classList.toggle('shadow')
     }
-
+    
     function getCmpMove() {
         let colmunIdx = utilService.getRandomIntInclusive(0, 6)
         return addToBoard(colmunIdx)
     }
-
+    
     return (
         <section className='board-page'>
             {modalOpen && <article className='menu-modal'>
@@ -83,11 +97,12 @@ export function BoardPage() {
                         key={indexC}
                         onClick={() => addToBoard(indexC)}
                         className={`cell ${cell.pos.i}-${cell.pos.j} ${cell.color ? cell.color : ''}`}
-                    ></div>)}
+                        ></div>)}
 
                 </div>)}
             </section>
             <Turn />
+                        <AppFooter/>
         </section >
     )
 }

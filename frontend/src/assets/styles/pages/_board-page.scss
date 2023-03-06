@@ -1,12 +1,13 @@
 .board-page {
     margin-top: em(30px);
+    position: relative;
+    z-index: 10;
 
     .board-options {
         display: flex;
         justify-content: center;
         align-items: center;
         gap: em(180px);
-        // padding-inline: 40%;
 
         .btn {
             font-family: space-gro !important;
@@ -20,6 +21,7 @@
     }
 
     .board {
+        z-index: 100;
         margin: 0 auto;
         margin-top: 40px;
         background-size: cover;
@@ -27,7 +29,7 @@
         max-width: 450px;
         max-height: 415px;
         background-image: url(../../imgs/board-layer-white-large.svg);
-        
+
         @media (max-width: 800px) {
             background-image: url(../../imgs/board-layer-white-small.svg);
             max-width: 335px;

@@ -14,11 +14,11 @@ import Turn from '../cmps/turn.jsx'
 import { showSuccessMsg } from '../services/event-bus.service'
 
 export function BoardPage() {
+
     const [modalOpen, setOpenModal] = useState(false)
     const [board, setBoard] = useState(boardService.getEmptyBoard())
     const [turn, setTurn] = useState(' yellow-disc')
     const navigate = useNavigate()
-    const mainLayoutRef = useRef(null)
 
     useEffect(() => {
         document.querySelector('.main-layout').style.backgroundColor = '#7945FF'
@@ -35,7 +35,7 @@ export function BoardPage() {
         const containerRect = container.getBoundingClientRect();
         const xPosition = event.clientX - containerRect.left;
         const imgMarker = document.querySelector('.img-marker');
-        imgMarker.style.left = xPosition + 'px';
+        imgMarker.style.left = xPosition - 70 + 'px';
     }
 
     useEffect(() => {
@@ -55,7 +55,6 @@ export function BoardPage() {
         const newBoard = board.slice()
         setBoard(newBoard)
         setTurn(turn === ' red-disc' ? ' yellow-disc' : ' red-disc')
-        /// need negs loop
         let win = boardService.checkWin(board, placeToSit.i, placeToSit.j, turn)
         if (win) showSuccessMsg('You won!')
     }
@@ -90,8 +89,9 @@ export function BoardPage() {
 
             <div className='board-options'>
                 <button onClick={toggleModal} className="btn">MENU</button>
-                <button className="btn">RESTART</button>
+                <button className="btn" onClick={() => setBoard(boardService.getEmptyBoard())}>RESTART</button>
             </div>
+            
             <section className='board-layout'>
                 <article className='player-modal player1'>
                     <img src={player1} alt="" />

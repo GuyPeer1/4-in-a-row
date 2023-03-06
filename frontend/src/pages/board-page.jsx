@@ -21,25 +21,28 @@ export function BoardPage() {
 
     useEffect(() => {
         document.querySelector('.main-layout').style.backgroundColor = '#7945FF'
-        if (turn === ' yellow-disc') {
-            const pos = boardService.getCmpMove(board)
-            addToBoard(pos.i, pos.j, turn)
-        }
+ 
     }, [])
 
 
-    function addToBoard(i, j, turn ) {
-        if (board[i][j].isEmpty === false) return
-        
-        board[i][j].isEmpty =  false
-        board[i][j].color = turn
+    function addToBoard(coulmnNumber) {
+        let possibleLocations = []
+        for (let row = 0; row < board.length; row++) {
+            let currColumnCell = board[row][coulmnNumber]
+            currColumnCell.isEmpty ? possibleLocations.push(currColumnCell.pos.i) : console.log('')
+        }
+        let placeToSit = { i: '', j: coulmnNumber }
+        placeToSit.i = Math.max(...possibleLocations)
+        board[placeToSit.i][placeToSit.j].isEmpty = false
+        board[placeToSit.i][placeToSit.j].color = turn
         const newBoard = board.slice()
         setBoard(newBoard)
-        setTurn(turn === ' red-disc' ? ' yellow-disc' : ' red-disc');
-        boardService.checkWin(board, i, j)
+        setTurn(turn === ' red-disc' ? ' yellow-disc' : ' red-disc')
+        /// need negs loop
+        boardService.checkWin(board, placeToSit.i, placeToSit.j)
     }
 
-   
+
     function startGame(player) {
 
     }
@@ -47,6 +50,11 @@ export function BoardPage() {
     function toggleModal() {
         modalOpen ? setOpenModal(false) : setOpenModal(true)
         document.querySelector('body').classList.toggle('shadow')
+    }
+
+    function getCmpMove() {
+        let colmunIdx = utilService.getRandomIntInclusive(0, 6)
+        return addToBoard(colmunIdx)
     }
 
     return (
@@ -71,11 +79,11 @@ export function BoardPage() {
 
                 <img className="img-game-logo" src={logo} />
                 <img className="img-marker" src={marker} />
-                {board.map((row, index) => <div key={index} className="row flex" >
+                {board.map((row, indexR) => <div key={indexR} className="row flex">
                     {row.map((cell, indexC) => <div
                         key={indexC}
+                        onClick={() => addToBoard(indexC)}
                         className={`cell ${cell.pos.i}-${cell.pos.j} ${cell.color ? cell.color : ''}`}
-                        onClick={() => addToBoard( cell.pos.i, cell.pos.j)}
                     ></div>)}
 
                 </div>)}

@@ -3,7 +3,6 @@ import { utilService } from "./util.service"
 export const boardService = {
     getEmptyBoard,
     checkWin,
-    getCmpMove
 }
 
 function getEmptyBoard() {
@@ -13,31 +12,47 @@ function getEmptyBoard() {
 
         for (let j = 0; j < 7; j++) {
             board[i][j] = _getEmptyCell(i, j)
-
         }
     }
     return board
 }
 
 function checkWin(board, i, j) {
-    let counter = 0
-    console.log(board.length)
-    for (let i = 0; i < board.length; i++) {
-
-        for (let j = 0; j < board[0].length; j++) {
-            if (board[i][j].isEmpty === false) {
-                counter++
-            }
-        }
-    }
-
-    if (counter === 4) {
-        return alert('you won')
-    }
+    if (_checkVertical(board, i, j)) console.log('won')
+    if (_checkHorizontal(board, i, j)) console.log('won')
+    if (_checkLeftDiagnol(board, i, j)) console.log('won')
+    if (_checkRightDiagnol(board, i, j)) console.log('won')
+   
 }
 
+function _checkVertical(board, row, j) {
+    let counter = 1
+    for (let i = 1; i < board.length - 1; i++) {
+        board[i][j].color === board[i + 1][j].color ? counter++ : counter = 1
+    }
 
-const colors = [' red', ' blue', ' pink', ' green']
+    if (counter === 4) return true
+    return false
+}
+
+function _checkHorizontal(board, I, J) {
+    let counter = 1
+    for (let i = 0; i < board[0].length - 1; i++) {
+        if (board[I][i].color === '') continue
+        board[I][i].color === board[I][i + 1 ].color ? counter++ : counter = 1
+        if (counter === 4) return true
+    }
+    return false
+}
+
+function _checkLeftDiagnol(board, I, J) {
+  
+}
+
+function _checkRightDiagnol(board, I, J) {
+   
+}
+
 
 function _getEmptyCell(i, j) {
     const cell = {
@@ -45,25 +60,6 @@ function _getEmptyCell(i, j) {
         color: '',
         pos: { i, j }
     }
-
     return cell
 }
 
-function getCmpMove(board) {
-    const emptyCells = []
-
-    // Find all empty cells on the board
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[i].length; j++) {
-            if (board[i][j].isEmpty) {
-                emptyCells.push({ i, j });
-            }
-        }
-    }
-
-    // Select a random empty cell for the computer to move
-    const randomIndex = Math.floor(Math.random() * emptyCells.length)
-    const { i, j } = emptyCells[randomIndex]
-
-    return { i, j }
-}

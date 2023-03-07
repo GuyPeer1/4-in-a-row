@@ -18,35 +18,25 @@ function getEmptyBoard() {
 }
 
 function checkWin(board, I, J, turn) {
-    if (_checkVertical(board, I, J, turn)) return true
-    else if (_checkHorizontal(board, I, J, turn)) return true
+    if (_checkVertical(board, J, turn)) return true
+    else if (_checkHorizontal(board, I, turn)) return true
     else if (_checkTLBRDiagnol(board, I, J, turn)) return true
     else if (_checkBLTRDiagnol(board, I, J, turn)) return true
 }
 
-function _checkVertical(board, I, J, turn) {
+function _checkVertical(board, J, turn) {
     let count = 0
     for (let i = 0; i < board.length; i++) {
-        if (board[i][J].color === turn) {
-            count++
-            if (count === 4) return true
-        } else {
-            count = 0
-        }
+        board[i][J].color === turn ? count++ : count = 0
+        if (count === 4) return true
     }
 }
 
-function _checkHorizontal(board, I, J, turn) {
+function _checkHorizontal(board, I, turn) {
     let count = 0
     for (let j = 0; j < board[0].length; j++) {
-        if (board[I][j].color === turn) {
-            count++
-            if (count === 4) {
-                return true
-            }
-        } else {
-            count = 0
-        }
+        board[I][j].color === turn ? count++ : count = 0
+        if (count === 4) return true
     }
 }
 
@@ -92,8 +82,6 @@ function _checkBLTRDiagnol(board, I, J, turn) {
         j++
     }
 }
-
-
 
 function _getEmptyCell(i, j) {
     const cell = {

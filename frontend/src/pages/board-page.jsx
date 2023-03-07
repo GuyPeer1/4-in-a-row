@@ -91,7 +91,7 @@ export function BoardPage() {
                 <button onClick={toggleModal} className="btn">MENU</button>
                 <button className="btn" onClick={() => setBoard(boardService.getEmptyBoard())}>RESTART</button>
             </div>
-            
+
             <section className='board-layout'>
                 <article className='player-modal player1'>
                     <img src={player1} alt="" />
@@ -110,6 +110,7 @@ export function BoardPage() {
                         ></div>)}
 
                     </div>)}
+                    <Turn />
                 </section>
 
                 <article className='player-modal player2'>
@@ -119,8 +120,7 @@ export function BoardPage() {
                 </article>
 
             </section>
-            <Turn />
-            <AppFooter/>
+            <AppFooter />
         </section >
     )
 }

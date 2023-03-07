@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import logoImg from '../assets/imgs/logo.svg'
 import cpuImg from '../assets/imgs/player-vs-cpu.svg'
 import playerVsPlayerImg from '../assets/imgs/player-vs-player.svg'
+import { showErrorMsg } from '../services/event-bus.service'
 import { userService } from '../services/user.service'
 
 export function HomePage() {
@@ -33,7 +34,7 @@ export function HomePage() {
     }
 
     function clearState() {
-        setCredentials({ username: '', password: '', fullname: ''})
+        setCredentials({ username: '', password: '', fullname: '' })
         setLoginModal(false)
     }
 
@@ -44,11 +45,16 @@ export function HomePage() {
         clearState()
     }
 
-    function onSignup(ev = null) {
+    async function onSignup(ev = null) {
         if (ev) ev.preventDefault()
         if (!credentials.username || !credentials.password || !credentials.fullname) return
-        userService.signup(credentials)
-        clearState()
+        try {
+            await userService.signup(credentials)
+            clearState()
+
+        } catch (err) {
+            showErrorMsg('Cannot sign up try one more time')
+        }
     }
 
     return (

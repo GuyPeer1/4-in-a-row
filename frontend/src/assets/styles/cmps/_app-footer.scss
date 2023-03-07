@@ -1,8 +1,8 @@
 .app-footer{
+    position: relative;
+    bottom: -20px;
     background-color: $clrDarkPurple;
     height: em(200px);
-    position: relative;
-    bottom: em(270px);
     border-radius: em(60px) em(60px) 0px 0px;
     z-index: -1;
 }

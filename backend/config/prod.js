@@ -1,4 +1,9 @@
+require('dotenv').config()
+
+const dbURL = process.env.DB_URL;
+const dbName = process.env.DB_NAME;
+
 module.exports = {
-  dbURL: 'mongodb+srv://theUser:thePass@cluster0-klgzh.mongodb.net/test?retryWrites=true&w=majority',
-  dbName : 'tester_db'
+  dbURL: dbURL,
+  dbName: dbName
 }

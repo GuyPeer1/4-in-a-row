@@ -1,31 +1,21 @@
 .turn {
     position: relative;
-    margin: 0 auto;
+    left: 28%;
     color: $clrWhite;
     font-family: space-gro;
     text-align: center;
-    bottom: em(30px);
-    width: fit-content;
+    bottom: em(45px);
+    max-width: em(200px);
 
-    .img-env {
-        position: relative;
-        max-width: 191px;
+    .turn-txt {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 
-    .img-txt {
-        position: relative;
-        bottom: em(110px);
-
-        display: flex;
-        flex-direction: column;
-
-        .player-name {
-            font-size: em(16px);
-        }
-
-        .time-left {
-            font-size: em(56px);
-        }
+    .time-left {
+        font-size: em(56px);
     }
 
 }

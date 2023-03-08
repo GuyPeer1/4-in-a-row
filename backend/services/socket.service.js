@@ -30,15 +30,15 @@ function setupSocketAPI(http) {
                 gIo.emit('start-game')
 
             }
-            if (count === 3) count = 1
+            if (count === 2) count = 0
         })
 
         socket.on('played-move', data => {
             broadcast('received-played-move', data, room = null, data.userId)
+            gIo.emit('restTimer')
         })
 
         socket.on('i-won', data => {
-            // console.log('data', data)
             broadcast('game-over', data, room = null, data.userId)
         })
 
@@ -52,9 +52,9 @@ function setupSocketAPI(http) {
             delete socket.userId
         })
 
-        socket.on('set-turn-timeout', () => {
-            emitToUser('start-first-turn', data = null, firstPlayer)
-        })
+        // socket.on('set-turn-timeout', () => {
+        //     emitToUser('start-first-turn', data = null, firstPlayer)
+        // })
 
 
     })

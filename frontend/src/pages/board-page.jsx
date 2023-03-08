@@ -16,13 +16,12 @@ import { socketService } from '../services/socket.service'
 import { userService } from '../services/user.service'
 
 export function BoardPage() {
-
-    const [oppTurn, setOppTurn] = useState(false)
+    const [time, setTime] = useState(30)
+    const [oppTurn, setOppTurn] = useState(null)
     const [loader, setLoader] = useState(false)
     const [modalOpen, setOpenModal] = useState(false)
     const [board, setBoard] = useState(boardService.getEmptyBoard())
     const [winner, setWinner] = useState(null)
-    // const [turn, setTurn] = useState(' yellow-disc')
     const [turn, setTurn] = useState(userService.getLoggedinUser().discColor)
     const navigate = useNavigate()
     const intervalId = useRef(null)
@@ -39,7 +38,6 @@ export function BoardPage() {
 
     ///socketlistaners
     useEffect(() => {
-        const user1 = userService.getLoggedinUser()
         socketService.emit('join-to-room', userService.getLoggedinUser()._id)
 
         socketService.on('player1', data => {
@@ -52,20 +50,19 @@ export function BoardPage() {
             let discColor = userService.saveDiscColor(data).discColor
             setTurn(discColor)
             setOppTurn(true)
-            setTimeout(() => {
-                setOppTurn(false)
-            }, 30000)
         })
 
         socketService.on('start-game', data => {
             setLoader(false)
             showSuccessMsg('pls start playing')
-            socketService.emit('set-turn-timeout')
+            setTimerForPlayers()
+
         })
 
         socketService.on('received-played-move', (data) => {
             addToBoard(data.coulmnNumber, true, data.discColor)
-            setOppTurn(!oppTurn)      
+            setOppTurn(false)
+            setTimerForPlayers()
         })
 
         socketService.on('game-over', (data) => {
@@ -73,30 +70,23 @@ export function BoardPage() {
             setWinner(true)
         })
 
-
-        socketService.on('start-first-turn', () => {
-            setTimeout(() => {
-                
-            }, 30000)
-            // intervalId.current = setInterval(() => {
-
-            // }, 1000)
-        })
-
     }, [])
 
+
     function handleMouseMove(event) {
-        const container = document.querySelector('.board');
-        const containerRect = container.getBoundingClientRect();
-        const xPosition = event.clientX - containerRect.left;
-        const imgMarker = document.querySelector('.img-marker');
-        imgMarker.style.left = xPosition - 20 + 'px';
+        const container = document.querySelector('.board')
+        const containerRect = container.getBoundingClientRect()
+        const xPosition = event.clientX - containerRect.left
+        const imgMarker = document.querySelector('.img-marker')
+        imgMarker.style.left = xPosition - 20 + 'px'
     }
 
     function addToBoard(coulmnNumber, fromSocket, discColor) {
         if (winner) return
         if (oppTurn) return
+
         const userId = userService.getLoggedinUser()._id
+
         const data = {
             coulmnNumber,
             userId,
@@ -109,7 +99,11 @@ export function BoardPage() {
 
         if (fromSocket !== true) {
             socketService.emit('played-move', data)
+            setOppTurn(true)
+            setStateForPlayer()
+            setTimerForPlayers()
         }
+
         else if (fromSocket === true) {
             if (discColor) {
                 board[placeToSit.i][placeToSit.j].color = discColor
@@ -126,6 +120,29 @@ export function BoardPage() {
             showSuccessMsg('You won')
             socketService.emit('i-won', data)
         }
+    }
+
+    function setTimerForPlayers() {
+        clearInterval(intervalId.current)
+
+        intervalId.current = setInterval(() => {
+            setTime((prevTime) => prevTime -= 1)
+        }, 1000)
+
+        setTimeout(() => {
+            clearInterval(intervalId.current)
+            setTime(30)
+            intervalId.current = setInterval(() => {
+                setTime((prevTime) => prevTime -= 1)
+            }, 1000)
+        }, 5000)
+    }
+
+    function setStateForPlayer() {
+        setTimeout(() => {
+            oppTurn ? setOppTurn(false) : setOppTurn(true)
+        }, 30000)
+
     }
 
     function toggleModal() {
@@ -186,7 +203,7 @@ export function BoardPage() {
                         ></div>)}
 
                     </div>)}
-                    <Turn />
+                    <Turn time={time} />
                 </section>
 
                 <article className='player-modal player2'>

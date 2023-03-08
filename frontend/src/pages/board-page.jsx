@@ -36,14 +36,17 @@ export function BoardPage() {
 
     ///socketlistaners
     useEffect(() => {
-        socketService.emit('join-to-room', turn)
+        socketService.emit('join-to-room')
 
-        socketService.on('player1', () => {
-            console.log('socket recived from backend')
+        socketService.on('player1', data => {
+            let discColor = userService.saveDiscColor(data).discColor
+            setTurn(discColor)
             setLoader(true)
         })
 
-        socketService.on('start-game', () => {
+        socketService.on('start-game', data => {
+            let discColor = userService.saveDiscColor(data).discColor
+            setTurn(discColor)
             setLoader(false)
             showSuccessMsg('pls start playing')
         })
@@ -72,12 +75,12 @@ export function BoardPage() {
             userId
         }
 
-        
+
         const placeToSit = boardService.getEmptyLocation(board, coulmnNumber)
         board[placeToSit.i][placeToSit.j].isEmpty = false
         board[placeToSit.i][placeToSit.j].color = turn
-   
-        if(fromSocket !== true) {
+
+        if (fromSocket !== true) {
             socketService.emit('played-move', data)
         }
 

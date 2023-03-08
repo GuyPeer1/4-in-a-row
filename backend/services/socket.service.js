@@ -15,14 +15,15 @@ function setupSocketAPI(http) {
             logger.info(`Socket disconnected [id: ${socket.id}]`)
         })
 
-        socket.on('join-to-room', turn => {
+        socket.on('join-to-room', () => {
             count++
             console.log('socket recived from frontend')
             if (count === 1) {
-                gIo.emit('player1')
+                gIo.emit('player1', ' red-disc')
             }
             if (count === 2) {
-                gIo.emit('start-game')
+                broadcast('player2')
+                gIo.emit('start-game', ' yellow-disc')
 
             }
             if (count === 3) count = 1
@@ -30,7 +31,6 @@ function setupSocketAPI(http) {
 
 
         socket.on('played-move', data => {
-            console.log(data)
             broadcast('received-played-move', data.coulmnNumber, room = null, data.userId)
         })
 

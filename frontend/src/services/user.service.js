@@ -13,6 +13,7 @@ export const userService = {
     getById,
     remove,
     update,
+    saveDiscColor
 }
 
 function getUsers() {
@@ -73,14 +74,14 @@ async function logout() {
         sessionStorage.removeItem(STORAGE_KEY_LOGGEDIN_USER)
         socketService.logout()
         return await httpService.post('auth/logout')
-    } catch(err) {
+    } catch (err) {
         console.log('something went wrong', err)
-        throw err 
+        throw err
     }
 }
 
 function saveLocalUser(user) {
-    user = { _id: user._id, username: user.username }
+    user = { _id: user._id, username: user.username, discColor: user.discColor }
     sessionStorage.setItem(STORAGE_KEY_LOGGEDIN_USER, JSON.stringify(user))
     return user
 }
@@ -89,4 +90,10 @@ function getLoggedinUser() {
     return JSON.parse(sessionStorage.getItem(STORAGE_KEY_LOGGEDIN_USER))
 }
 
+function saveDiscColor(discColor) {
+    let user = getLoggedinUser()
+    user.discColor = discColor
+    saveLocalUser(user)
+    return user
+}
 

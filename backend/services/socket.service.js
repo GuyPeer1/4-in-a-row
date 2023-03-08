@@ -1,6 +1,8 @@
 const logger = require('./logger.service')
 
 var gIo = null
+let firstPlayer = ''
+let secondPlayer = ''
 
 function setupSocketAPI(http) {
     let count = 0
@@ -20,8 +22,10 @@ function setupSocketAPI(http) {
             console.log('socket recived from frontend')
             if (count === 1) {
                 gIo.emit('player1', ' red-disc')
+                firstPlayer = userId
             }
             if (count === 2) {
+                secondPlayer = userId
                 emitToUser('player2', ' yellow-disc', userId)
                 gIo.emit('start-game')
 
@@ -33,6 +37,11 @@ function setupSocketAPI(http) {
             broadcast('received-played-move', data, room = null, data.userId)
         })
 
+        socket.on('i-won', data => {
+            // console.log('data', data)
+            broadcast('game-over', data, room = null, data.userId)
+        })
+
         socket.on('set-user-socket', userId => {
             logger.info(`Setting socket.userId = ${userId} for socket [id: ${socket.id}]`)
             socket.userId = userId
@@ -42,6 +51,11 @@ function setupSocketAPI(http) {
             logger.info(`Removing socket.userId for socket [id: ${socket.id}]`)
             delete socket.userId
         })
+
+        socket.on('set-turn-timeout', () => {
+            emitToUser('start-first-turn', data = null, firstPlayer)
+        })
+
 
     })
 }

@@ -11,12 +11,13 @@ import player1 from '../assets/imgs/player-one.svg'
 import player2 from '../assets/imgs/player-two.svg'
 
 import Turn from '../cmps/turn.jsx'
-import { showSuccessMsg } from '../services/event-bus.service'
+import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service'
 import { socketService } from '../services/socket.service'
 import { userService } from '../services/user.service'
 
 export function BoardPage() {
 
+    const [oppTurn, setOppTurn] = useState(false)
     const [loader, setLoader] = useState(false)
     const [modalOpen, setOpenModal] = useState(false)
     const [board, setBoard] = useState(boardService.getEmptyBoard())
@@ -24,6 +25,7 @@ export function BoardPage() {
     // const [turn, setTurn] = useState(' yellow-disc')
     const [turn, setTurn] = useState(userService.getLoggedinUser().discColor)
     const navigate = useNavigate()
+    const intervalId = useRef(null)
 
     //// util
     useEffect(() => {
@@ -38,7 +40,6 @@ export function BoardPage() {
     ///socketlistaners
     useEffect(() => {
         const user1 = userService.getLoggedinUser()
-        console.log(user1)
         socketService.emit('join-to-room', userService.getLoggedinUser()._id)
 
         socketService.on('player1', data => {
@@ -50,15 +51,36 @@ export function BoardPage() {
         socketService.on('player2', data => {
             let discColor = userService.saveDiscColor(data).discColor
             setTurn(discColor)
+            setOppTurn(true)
+            setTimeout(() => {
+                setOppTurn(false)
+            }, 30000)
         })
 
         socketService.on('start-game', data => {
             setLoader(false)
             showSuccessMsg('pls start playing')
+            socketService.emit('set-turn-timeout')
         })
 
         socketService.on('received-played-move', (data) => {
             addToBoard(data.coulmnNumber, true, data.discColor)
+            setOppTurn(!oppTurn)      
+        })
+
+        socketService.on('game-over', (data) => {
+            showErrorMsg('bad player has won ):')
+            setWinner(true)
+        })
+
+
+        socketService.on('start-first-turn', () => {
+            setTimeout(() => {
+                
+            }, 30000)
+            // intervalId.current = setInterval(() => {
+
+            // }, 1000)
         })
 
     }, [])
@@ -73,7 +95,7 @@ export function BoardPage() {
 
     function addToBoard(coulmnNumber, fromSocket, discColor) {
         if (winner) return
-
+        if (oppTurn) return
         const userId = userService.getLoggedinUser()._id
         const data = {
             coulmnNumber,
@@ -90,7 +112,6 @@ export function BoardPage() {
         }
         else if (fromSocket === true) {
             if (discColor) {
-                console.log(discColor)
                 board[placeToSit.i][placeToSit.j].color = discColor
             }
         }
@@ -103,6 +124,7 @@ export function BoardPage() {
         if (win) {
             setWinner(true)
             showSuccessMsg('You won')
+            socketService.emit('i-won', data)
         }
     }
 
@@ -173,7 +195,7 @@ export function BoardPage() {
                     <h4>23</h4>
                 </article>
 
-                <section className="app-footer"></section>
+                {/* <section className="app-footer"></section> */}
             </section>}
 
 

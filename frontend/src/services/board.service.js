@@ -3,9 +3,11 @@ import { utilService } from "./util.service"
 export const boardService = {
     getEmptyBoard,
     checkWin,
+    getEmptyLocation
 }
 
 function getEmptyBoard() {
+
     let board = []
     for (let i = 0; i < 6; i++) {
         board[i] = []
@@ -15,6 +17,17 @@ function getEmptyBoard() {
         }
     }
     return board
+}
+
+function getEmptyLocation(board, coulmnNumber) {
+    let possibleLocations = []
+    for (let row = 0; row < board.length; row++) {
+        let currColumnCell = board[row][coulmnNumber]
+        currColumnCell.isEmpty ? possibleLocations.push(currColumnCell.pos.i) : console.log('')
+    }
+    let placeToSit = { i: '', j: coulmnNumber }
+    placeToSit.i = Math.max(...possibleLocations)
+    return placeToSit
 }
 
 function checkWin(board, I, J, turn) {

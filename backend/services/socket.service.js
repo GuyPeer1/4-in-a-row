@@ -15,23 +15,22 @@ function setupSocketAPI(http) {
             logger.info(`Socket disconnected [id: ${socket.id}]`)
         })
 
-        socket.on('join-to-room', () => {
+        socket.on('join-to-room', (userId) => {
             count++
             console.log('socket recived from frontend')
             if (count === 1) {
                 gIo.emit('player1', ' red-disc')
             }
             if (count === 2) {
-                broadcast('player2')
-                gIo.emit('start-game', ' yellow-disc')
+                emitToUser('player2', ' yellow-disc', userId)
+                gIo.emit('start-game')
 
             }
             if (count === 3) count = 1
         })
 
-
         socket.on('played-move', data => {
-            broadcast('received-played-move', data.coulmnNumber, room = null, data.userId)
+            broadcast('received-played-move', data, room = null, data.userId)
         })
 
         socket.on('set-user-socket', userId => {
@@ -52,8 +51,9 @@ function emitTo({ type, data, label }) {
     else gIo.emit(type, data)
 }
 
-async function emitToUser({ type, data, userId }) {
-    userId = userId.toString()
+async function emitToUser(type, data, userId) {
+    console.log('userId from emitToUser', userId)
+    // userId = userId.toString()
     const socket = await _getUserSocket(userId)
 
     if (socket) {
@@ -90,7 +90,6 @@ async function broadcast(type, data, room = null, userId) {
 
 async function _getUserSocket(userId) {
     const sockets = await _getAllSockets()
-    console.log(sockets)
     const socket = sockets.find(s => s.userId === userId)
     return socket
 }

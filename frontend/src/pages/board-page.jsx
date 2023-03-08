@@ -21,7 +21,8 @@ export function BoardPage() {
     const [modalOpen, setOpenModal] = useState(false)
     const [board, setBoard] = useState(boardService.getEmptyBoard())
     const [winner, setWinner] = useState(null)
-    const [turn, setTurn] = useState(' yellow-disc')
+    // const [turn, setTurn] = useState(' yellow-disc')
+    const [turn, setTurn] = useState(userService.getLoggedinUser().discColor)
     const navigate = useNavigate()
 
     //// util
@@ -36,7 +37,9 @@ export function BoardPage() {
 
     ///socketlistaners
     useEffect(() => {
-        socketService.emit('join-to-room')
+        const user1 = userService.getLoggedinUser()
+        console.log(user1)
+        socketService.emit('join-to-room', userService.getLoggedinUser()._id)
 
         socketService.on('player1', data => {
             let discColor = userService.saveDiscColor(data).discColor
@@ -44,19 +47,21 @@ export function BoardPage() {
             setLoader(true)
         })
 
-        socketService.on('start-game', data => {
+        socketService.on('player2', data => {
             let discColor = userService.saveDiscColor(data).discColor
             setTurn(discColor)
+        })
+
+        socketService.on('start-game', data => {
             setLoader(false)
             showSuccessMsg('pls start playing')
         })
 
-        socketService.on('received-played-move', (coulmnNumber) => {
-            addToBoard(coulmnNumber, true)
+        socketService.on('received-played-move', (data) => {
+            addToBoard(data.coulmnNumber, true, data.discColor)
         })
 
     }, [])
-
 
     function handleMouseMove(event) {
         const container = document.querySelector('.board');
@@ -66,15 +71,15 @@ export function BoardPage() {
         imgMarker.style.left = xPosition - 20 + 'px';
     }
 
-    function addToBoard(coulmnNumber, fromSocket) {
+    function addToBoard(coulmnNumber, fromSocket, discColor) {
         if (winner) return
 
         const userId = userService.getLoggedinUser()._id
         const data = {
             coulmnNumber,
-            userId
+            userId,
+            discColor: userService.getLoggedinUser().discColor
         }
-
 
         const placeToSit = boardService.getEmptyLocation(board, coulmnNumber)
         board[placeToSit.i][placeToSit.j].isEmpty = false
@@ -83,10 +88,15 @@ export function BoardPage() {
         if (fromSocket !== true) {
             socketService.emit('played-move', data)
         }
+        else if (fromSocket === true) {
+            if (discColor) {
+                console.log(discColor)
+                board[placeToSit.i][placeToSit.j].color = discColor
+            }
+        }
 
         const newBoard = board.slice()
         setBoard(newBoard)
-        setTurn(turn === ' red-disc' ? ' yellow-disc' : ' red-disc')
 
         let win = boardService.checkWin(board, placeToSit.i, placeToSit.j, turn)
 

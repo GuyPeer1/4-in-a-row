@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import checkImg from '../assets/imgs/icon-check.svg'
 
-
 export function RulesPage() {
 
     const navigate = useNavigate()

@@ -8,12 +8,14 @@ export const SET_WATCHED_USER = 'SET_WATCHED_USER'
 export const REMOVE_USER = 'REMOVE_USER'
 export const SET_USERS = 'SET_USERS'
 export const SET_SCORE = 'SET_SCORE'
+export const SET_VS_CPU = 'SET_VS_CPU'
 
 const initialState = {
     count: 10,
     user: userService.getLoggedinUser(),
     users: [],
-    watchedUser : null
+    watchedUser: null,
+    cpuMode: false
 }
 
 export function userReducer(state = initialState, action) {
@@ -46,11 +48,10 @@ export function userReducer(state = initialState, action) {
         case SET_SCORE:
             newState = { ...state, user: { ...state.user, score: action.score } }
             break
+        case SET_VS_CPU:
+            newState = { ...state, cpuMode: action }
         default:
     }
-    // For debug:
-    // window.userState = newState
-    // console.log('State:', newState)
     return newState
 
 }

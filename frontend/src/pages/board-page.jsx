@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import { useSelector } from 'react-redux'
 import { boardService } from '../services/board.service'
 import { utilService } from '../services/util.service.js'
 import { AppFooter } from '../cmps/app-footer'
@@ -9,6 +9,8 @@ import logo from '../assets/imgs/logo.svg'
 import marker from '../assets/imgs/marker-red.svg'
 import player1 from '../assets/imgs/player-one.svg'
 import player2 from '../assets/imgs/player-two.svg'
+import RingLoader from 'react-spinners/RingLoader.js';
+
 
 import Turn from '../cmps/turn.jsx'
 import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service'
@@ -16,6 +18,7 @@ import { socketService } from '../services/socket.service'
 import { userService } from '../services/user.service'
 
 export function BoardPage() {
+
     const [time, setTime] = useState(30)
     const [oppTurn, setOppTurn] = useState(null)
     const [loader, setLoader] = useState(false)
@@ -25,6 +28,8 @@ export function BoardPage() {
     const [turn, setTurn] = useState(userService.getLoggedinUser().discColor)
     const navigate = useNavigate()
     const intervalId = useRef(null)
+
+    const cpuMode = useSelector(storeState => storeState.userModule.cpuMode)
 
     //// util
     useEffect(() => {
@@ -36,40 +41,50 @@ export function BoardPage() {
         }
     }, [])
 
-    ///socketlistaners
     useEffect(() => {
-        socketService.emit('join-to-room', userService.getLoggedinUser()._id)
+        if (!cpuMode) {
 
-        socketService.on('player1', data => {
-            let discColor = userService.saveDiscColor(data).discColor
-            setTurn(discColor)
-            setLoader(true)
-        })
+            socketService.emit('join-to-room', userService.getLoggedinUser()._id)
 
-        socketService.on('player2', data => {
-            let discColor = userService.saveDiscColor(data).discColor
-            setTurn(discColor)
-            setOppTurn(true)
-        })
+            socketService.on('player1', data => {
+                let discColor = userService.saveDiscColor(data).discColor
+                setTurn(discColor)
+                setLoader(true)
+            })
 
-        socketService.on('start-game', data => {
-            setLoader(false)
-            showSuccessMsg('pls start playing')
-            setTimerForPlayers()
+            socketService.on('player2', data => {
+                let discColor = userService.saveDiscColor(data).discColor
+                setTurn(discColor)
+                setOppTurn(true)
+            })
 
-        })
+            socketService.on('start-game', data => {
+                setLoader(false)
+                showSuccessMsg('pls start playing')
+                setTimerForPlayers()
 
-        socketService.on('received-played-move', (data) => {
-            addToBoard(data.coulmnNumber, true, data.discColor)
-            setOppTurn(false)
-            setTimerForPlayers()
-        })
+            })
 
-        socketService.on('game-over', (data) => {
-            showErrorMsg('bad player has won ):')
-            setWinner(true)
-        })
+            socketService.on('received-played-move', (data) => {
+                addToBoard(data.coulmnNumber, true, data.discColor)
+                setOppTurn(false)
+                setTimerForPlayers()
+            })
 
+            socketService.on('game-over', (data) => {
+                showErrorMsg('bad player has won ):')
+                setWinner(true)
+            })
+
+            return () => {
+                socketService.off('player1')
+                socketService.off('player2')
+                socketService.off('start-game')
+                socketService.off('received-played-move')
+                socketService.off('game-over')
+            }
+
+        }
     }, [])
 
 
@@ -81,17 +96,39 @@ export function BoardPage() {
         imgMarker.style.left = xPosition - 20 + 'px'
     }
 
+    /// for vs cpu
+    function playerVsCpu(coulmnNumber) {
+
+        if (winner) return
+        const placeToSit = boardService.getEmptyLocation(board, coulmnNumber)
+        board[placeToSit.i][placeToSit.j].isEmpty = false
+        board[placeToSit.i][placeToSit.j].color = 'red'
+
+
+        const newBoard = board.slice()
+        setBoard((oldBoard) => newBoard)
+
+        let win = boardService.checkWin(board, placeToSit.i, placeToSit.j, 'red')
+
+        if (win) {
+            setWinner(true)
+            showSuccessMsg('You won')
+        }
+
+        setTimeout(() => {
+            getCmpMove()
+        }, 500)
+
+    }
+
+
+    /// main function
     function addToBoard(coulmnNumber, fromSocket, discColor) {
+        if (cpuMode) return playerVsCpu(coulmnNumber)
         if (winner) return
         if (oppTurn) return
 
-        const userId = userService.getLoggedinUser()._id
-
-        const data = {
-            coulmnNumber,
-            userId,
-            discColor: userService.getLoggedinUser().discColor
-        }
+        const data = GetDataForBoard(coulmnNumber)
 
         const placeToSit = boardService.getEmptyLocation(board, coulmnNumber)
         board[placeToSit.i][placeToSit.j].isEmpty = false
@@ -122,6 +159,17 @@ export function BoardPage() {
         }
     }
 
+    function GetDataForBoard(coulmnNumber) {
+        const userId = userService.getLoggedinUser()._id
+        const data = {
+            coulmnNumber,
+            userId,
+            discColor: userService.getLoggedinUser().discColor
+        }
+        return data
+    }
+
+
     function setTimerForPlayers() {
         clearInterval(intervalId.current)
 
@@ -151,18 +199,43 @@ export function BoardPage() {
     }
 
     function getCmpMove() {
+
         let colmunIdx = utilService.getRandomIntInclusive(0, 6)
-        return addToBoard(colmunIdx)
+        const placeToSit = boardService.getEmptyLocation(board, colmunIdx)
+        if(!placeToSit) placeToSit = boardService.getEmptyLocation(board, colmunIdx)
+
+        board[placeToSit.i][placeToSit.j].isEmpty = false
+        board[placeToSit.i][placeToSit.j].color = 'yellow'
+
+        const newBoard = board.slice()
+        setBoard((oldBoard) => newBoard)
+
+        let win = boardService.checkWin(board, placeToSit.i, placeToSit.j, 'yellow')
+
+        if (win) {
+            setWinner(true)
+            showSuccessMsg('Cpu won')
+        }
+
     }
 
     function restartGame() {
         setBoard(boardService.getEmptyBoard())
         setWinner(null)
+        socketService.emit('restart-game', 'blablabla')
+    }
+
+    function loaderSize() {
+        let loaderSize = {
+            width: '80px',
+            height: '80px'
+        }
+        return loaderSize
     }
 
     return (
         <section className='board-page'>
-            {loader && <h2>loading</h2>}
+            {loader && <div className="loader"><RingLoader size={250} color="#FFCE67" /></div>}
 
             {modalOpen && <article className='menu-modal'>
 
@@ -175,8 +248,6 @@ export function BoardPage() {
                 </div>
 
             </article>}
-
-            {/* <img className="img-game-logo" src={logo} /> */}
 
             {!loader && <section className='board-layout'>
 

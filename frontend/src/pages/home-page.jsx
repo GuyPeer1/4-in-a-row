@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import logoImg from '../assets/imgs/logo.svg'
 import cpuImg from '../assets/imgs/player-vs-cpu.svg'
 import playerVsPlayerImg from '../assets/imgs/player-vs-player.svg'
-import { showErrorMsg } from '../services/event-bus.service'
+import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service'
 import { userService } from '../services/user.service'
+import { playVsCpu } from '../store/user.actions'
 
 export function HomePage() {
     const [credentials, setCredentials] = useState({ username: '', password: '', fullname: '' })
     const [loginModal, setLoginModal] = useState(false)
     const [isSignup, setIsSignup] = useState(true)
-
 
     const navigate = useNavigate()
 
@@ -43,7 +43,9 @@ export function HomePage() {
         if (!credentials.username) return
         userService.login(credentials)
         clearState()
+        showSuccessMsg(`Hello ${credentials.username}`)
     }
+
 
     async function onSignup(ev = null) {
         if (ev) ev.preventDefault()
@@ -57,6 +59,12 @@ export function HomePage() {
         }
     }
 
+    function handleGameVsCpu(boolean) {
+        navigate('/board-page')
+        playVsCpu(boolean)
+    }
+
+
     return (
         <section className='home-page'>
 
@@ -66,75 +74,81 @@ export function HomePage() {
 
 
                 <div className="btn-area">
-                    <button onClick={() => navigate('/board-page')} className='btn cpu'><span>PLAY VS CPU</span> <img src={cpuImg} alt="" /></button>
+                    <button onClick={handleGameVsCpu} className='btn cpu'><span>PLAY VS CPU</span> <img src={cpuImg} alt="" /></button>
                     <button onClick={() => navigate('/board-page')} className='btn player'><span>PLAY VS PLAYER</span> <img src={playerVsPlayerImg} alt="" /></button>
                     <button onClick={moveToRules} className='btn rules'>GAME RULES</button>
                 </div>
 
             </article>
 
-            {loginModal && <section>
-                {isSignup && <article className='login-signup-modal'>
-                    <img src={logoImg} alt="" />
-                    <form className='login-form' onSubmit={onLogin}>
-                        <input
-                            type="text"
-                            name="username"
-                            value={credentials.username}
-                            placeholder="Username"
-                            onChange={handleChange}
-                            required
-                            autoFocus
-                        />
-                        <input
-                            type="password"
-                            name="password"
-                            value={credentials.password}
-                            placeholder="Password"
-                            onChange={handleChange}
-                            required
-                        />
-                        <button className="btn-signup-login">LOGIN</button>
-                    </form>
+            {
+                loginModal && <section>
+                    {isSignup && <article className='login-signup-modal'>
+                        <div className="flex">
+                            <button onClick={() => setLoginModal(false)}>x</button>
+                            <img src={logoImg} alt="" />
 
-                    <button className="btn-signup-login" onClick={toggleSignup}>{isSignup ? 'Signup' : 'Login'}</button>
+                        </div>
+                        <form className='login-form' onSubmit={onLogin}>
+                            <input
+                                type="text"
+                                name="username"
+                                value={credentials.username}
+                                placeholder="Username"
+                                onChange={handleChange}
+                                required
+                                autoFocus
+                            />
+                            <input
+                                type="password"
+                                name="password"
+                                value={credentials.password}
+                                placeholder="Password"
+                                onChange={handleChange}
+                                required
+                            />
+                            <button className="btn-signup-login">LOGIN</button>
+                        </form>
 
-                </article>}
+                        <button className="btn-signup-login" onClick={toggleSignup}>{isSignup ? 'Signup' : 'Login'}</button>
 
-                {!isSignup && <article className='login-signup-modal'>
+                    </article>}
 
-                    <form className='signup-form' onSubmit={onSignup}>
-                        <img src={logoImg} alt="" />
-                        <input
-                            type="text"
-                            name="fullname"
-                            value={credentials.fullname}
-                            placeholder="Fullname"
-                            onChange={handleChange}
-                            required
-                        />
-                        <input
-                            type="text"
-                            name="username"
-                            value={credentials.username}
-                            placeholder="Username"
-                            onChange={handleChange}
-                            required
-                        />
-                        <input
-                            type="password"
-                            name="password"
-                            value={credentials.password}
-                            placeholder="Password"
-                            onChange={handleChange}
-                            required
-                        />
-                        <button className="btn-signup-login">SIGNUP</button>
-                    </form>
-                    <button className="btn-signup-login" onClick={toggleSignup}>{isSignup ? 'Signup' : 'Login'}</button>
-                </article>}
+                    {!isSignup && <article className='login-signup-modal'>
 
-            </section >}
+                        <form className='signup-form' onSubmit={onSignup}>
+                            <img src={logoImg} alt="" />
+                            <input
+                                type="text"
+                                name="fullname"
+                                value={credentials.fullname}
+                                placeholder="Fullname"
+                                onChange={handleChange}
+                                required
+                            />
+                            <input
+                                type="text"
+                                name="username"
+                                value={credentials.username}
+                                placeholder="Username"
+                                onChange={handleChange}
+                                required
+                            />
+                            <input
+                                type="password"
+                                name="password"
+                                value={credentials.password}
+                                placeholder="Password"
+                                onChange={handleChange}
+                                required
+                            />
+                            <button className="btn-signup-login">SIGNUP</button>
+                        </form>
+                        <button className="btn-signup-login" onClick={toggleSignup}>{isSignup ? 'Signup' : 'Login'}</button>
+                    </article>}
+
+                </section >
+            }
         </section >
     )
 }

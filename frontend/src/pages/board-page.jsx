@@ -25,7 +25,7 @@ export function BoardPage() {
     const [modalOpen, setOpenModal] = useState(false)
     const [board, setBoard] = useState(boardService.getEmptyBoard())
     const [winner, setWinner] = useState(null)
-    const [turn, setTurn] = useState(userService.getLoggedinUser().discColor)
+    const [turn, setTurn] = useState(userService.getLoggedinUser()?.discColor || 'red')
     const navigate = useNavigate()
     const intervalId = useRef(null)
 
@@ -113,12 +113,13 @@ export function BoardPage() {
         if (win) {
             setWinner(true)
             showSuccessMsg('You won')
+
+        } else {
+            
+            setTimeout(() => {
+                getCmpMove()
+            }, 500)
         }
-
-        setTimeout(() => {
-            getCmpMove()
-        }, 500)
-
     }
 
 
@@ -202,7 +203,7 @@ export function BoardPage() {
 
         let colmunIdx = utilService.getRandomIntInclusive(0, 6)
         const placeToSit = boardService.getEmptyLocation(board, colmunIdx)
-        if(!placeToSit) placeToSit = boardService.getEmptyLocation(board, colmunIdx)
+        if (!placeToSit) placeToSit = boardService.getEmptyLocation(board, colmunIdx)
 
         board[placeToSit.i][placeToSit.j].isEmpty = false
         board[placeToSit.i][placeToSit.j].color = 'yellow'

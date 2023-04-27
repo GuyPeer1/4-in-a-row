@@ -6,6 +6,7 @@ import playerVsPlayerImg from '../assets/imgs/player-vs-player.svg'
 import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service'
 import { userService } from '../services/user.service'
 import { playVsCpu } from '../store/user.actions'
+import backImg from '../assets/imgs/back.png'
 
 export function HomePage() {
     const [credentials, setCredentials] = useState({ username: '', password: '', fullname: '' })
@@ -84,11 +85,13 @@ export function HomePage() {
             {
                 loginModal && <section>
                     {isSignup && <article className='login-signup-modal'>
-                        <div className="flex">
-                            <button onClick={() => setLoginModal(false)}>x</button>
+
+                        <div className="head-nav">
+                            <img onClick={() => setLoginModal(false)} src={backImg} alt='back' className='back-img'/>
                             <img src={logoImg} alt="" />
 
                         </div>
+
                         <form className='login-form' onSubmit={onLogin}>
                             <input
                                 type="text"

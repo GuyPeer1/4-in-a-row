@@ -23,7 +23,7 @@ function getEmptyLocation(board, coulmnNumber) {
     let possibleLocations = []
     for (let row = 0; row < board.length; row++) {
         let currColumnCell = board[row][coulmnNumber]
-        currColumnCell.isEmpty ? possibleLocations.push(currColumnCell.pos.i) : console.log('')
+        if(currColumnCell.isEmpty) possibleLocations.push(currColumnCell.pos.i)
     }
     let placeToSit = { i: '', j: coulmnNumber }
     placeToSit.i = Math.max(...possibleLocations)

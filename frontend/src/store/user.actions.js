@@ -10,9 +10,7 @@ export async function loadUsers() {
         store.dispatch({ type: SET_USERS, users })
     } catch (err) {
         console.log('UserActions: err in loadUsers', err)
-    } finally {
-        store.dispatch({ type: LOADING_DONE })
-    }
+    } 
 }
 
 export async function removeUser(userId) {
